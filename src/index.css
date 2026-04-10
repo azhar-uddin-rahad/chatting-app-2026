@@ -1,0 +1,76 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  list-style-type: none;
+}
+.authenticationPage {
+  display: flex;
+}
+.authenticationPage .left {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  justify-content: end;
+}
+
+.authenticationPage .left .text-container {
+  margin-top: 100px;
+  width: 60%;
+}
+.authenticationPage .left .text-container h1 {
+  font-size: 34px;
+  font-weight: 700;
+  color: #11175d;
+}
+.mt-2 {
+  margin-top: 8px;
+  width: 90%;
+}
+.authenticationPage .left .text-container p {
+  font-size: 20px;
+  font-weight: 400;
+  color: #000;
+  margin-top: 13px;
+}
+
+.authenticationPage .right {
+  width: 50%;
+  height: 100vh;
+}
+
+.authenticationPage .bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.inputCss {
+  margin-top: 56px !important;
+  width: 90%;
+}
+
+.SignUpBtn {
+  width: 90%;
+  margin-top: 70px !important;
+  padding: 20px 0 !important;
+  border-radius: 86px !important;
+}
+
+.semiText {
+  color: #03014c;
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 35px !important;
+  text-align: center;
+}
+.orange {
+  color: #ea6c00;
+}
+
+.eye {
+  position: relative;
+  top: 75px;
+  right: 31px;
+}
