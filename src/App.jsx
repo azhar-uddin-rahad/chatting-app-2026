@@ -12,11 +12,14 @@ import {
 import Home from './Pages/Home'
 import Login from './Pages/Login'
 import Registration from './Pages/Registration'
-
+import { ToastContainer, toast } from 'react-toastify';
+import ForgetPassword from './Pages/ForgetPassword'
 let router= createBrowserRouter( createRoutesFromElements(
   <Route>
     <Route path='/' element={<Login></Login>}></Route>
     <Route path='/sign_up' element={<Registration></Registration>}></Route>
+    <Route path='/forget-password' element={<ForgetPassword></ForgetPassword>}></Route>
+    <Route path='/home' element={<Home></Home>}></Route>
   </Route>
 ))
 
@@ -24,7 +27,10 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
+    <>
     <RouterProvider router={router} />
+    <ToastContainer />
+    </>
     
   )
 }

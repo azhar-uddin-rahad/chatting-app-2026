@@ -3,7 +3,12 @@ import log from "../assets/log.png";
 import { Alert, Button, TextField, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Image from "../Components/Image";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { toast } from "react-toastify";
 const Login = () => {
+    const auth = getAuth();
+    const navigate= useNavigate()
+    console.log("I am auth", auth)
   const [fromData, setFromData] = useState({
     email: "",
     password: "",
@@ -34,13 +39,66 @@ const Login = () => {
     }
     if (!fromData.password) {
 
-      newError.passwordError = "Enter YOur Email";
+      newError.passwordError = "Enter YOur Password";
     }
     setError({...error,...newError})
-  };
-  if(fromData.email && fromData.password){
-    console.log("enter email and enter password confirm")
+     if(fromData.email && fromData.password){
+    
+signInWithEmailAndPassword(auth, fromData.email, fromData.password)
+  .then((userCredential) => {
+      const user = userCredential.user;
+      if(user.emailVerified){
+           setFromData({
+                email: "",
+                password: "",
+                loading: false,
+              });
+              toast.success('User Login SuccessFul', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                });
+                setTimeout(()=>{
+                    navigate('/home')
+                  })
+      }
+      else{
+         toast.error('Please Verify you email', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                });
+      }
+  
+  }).catch((error) => {
+    const errorCode = error.code;
+   console.log('error:', errorCode)
+    if(errorCode.includes("auth")){
+            toast.error(`${errorCode.split('/')[1]}`, {
+              position: "bottom-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              }); 
+          }
+  });
   }
+  };
+ 
   console.log(error);
   return (
     <div className="authenticationPage">
@@ -85,11 +143,11 @@ const Login = () => {
             </Alert>
           )} */}
           <Typography component="p" variant="p" className="orange">
-            Forget Password ? <Link to="/forgotpassword">Click here ?</Link>
+            Forget Password ? <Link to="/forget-password">Click here ?</Link>
           </Typography>
           <Button
             variant="contained"
-            onClick={handleSignUp}
+            onClick={()=>handleSignUp()}
             className="SignUpBtn"
           >
             Login to Continue
