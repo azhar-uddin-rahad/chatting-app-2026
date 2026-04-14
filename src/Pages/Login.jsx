@@ -3,8 +3,9 @@ import log from "../assets/log.png";
 import { Alert, Button, TextField, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Image from "../Components/Image";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { toast } from "react-toastify";
+
 const Login = () => {
     const auth = getAuth();
     const navigate= useNavigate()
@@ -64,7 +65,7 @@ signInWithEmailAndPassword(auth, fromData.email, fromData.password)
                 theme: "light",
                 });
                 setTimeout(()=>{
-                    navigate('/home')
+                    navigate('/chatting-app')
                   })
       }
       else{
@@ -98,7 +99,27 @@ signInWithEmailAndPassword(auth, fromData.email, fromData.password)
   });
   }
   };
- 
+ const handleLoginWithGoogle=()=>{
+  console.log(" Hello world")
+ const provider = new GoogleAuthProvider();
+signInWithPopup(auth, provider)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const user = result.user;
+   console.log(user)
+   navigate('/chatting-app')
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    console.log(errorCode)
+    // ...
+  });
+ }
   console.log(error);
   return (
     <div className="authenticationPage">
@@ -160,9 +181,9 @@ signInWithEmailAndPassword(auth, fromData.email, fromData.password)
             </Link>
           </Typography>
           <button
-          // onClick={loginWithFd}
+         onClick={()=>{handleLoginWithGoogle()}}
           >
-            Login with facebook
+            Login with Google
           </button>
         </div>
       </div>

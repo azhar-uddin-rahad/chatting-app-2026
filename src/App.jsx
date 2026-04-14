@@ -14,12 +14,14 @@ import Login from './Pages/Login'
 import Registration from './Pages/Registration'
 import { ToastContainer, toast } from 'react-toastify';
 import ForgetPassword from './Pages/ForgetPassword'
+import RootLayout from './RootLayout/RootLayout'
 let router= createBrowserRouter( createRoutesFromElements(
   <Route>
     <Route path='/' element={<Login></Login>}></Route>
     <Route path='/sign_up' element={<Registration></Registration>}></Route>
     <Route path='/forget-password' element={<ForgetPassword></ForgetPassword>}></Route>
     <Route path='/home' element={<Home></Home>}></Route>
+    <Route path="/chatting-app" element={<RootLayout></RootLayout>}></Route>
   </Route>
 ))
 
