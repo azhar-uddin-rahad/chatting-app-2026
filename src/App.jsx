@@ -15,6 +15,7 @@ import Registration from './Pages/Registration'
 import { ToastContainer, toast } from 'react-toastify';
 import ForgetPassword from './Pages/ForgetPassword'
 import RootLayout from './RootLayout/RootLayout'
+
 let router= createBrowserRouter( createRoutesFromElements(
   <Route>
     <Route path='/' element={<Login></Login>}></Route>
