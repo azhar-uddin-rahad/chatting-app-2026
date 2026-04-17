@@ -5,11 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Image from "../Components/Image";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { toast } from "react-toastify";
-
+import { useDispatch } from "react-redux";
+import { logUser } from "../Slice/userSlicer"
 const Login = () => {
     const auth = getAuth();
-    const navigate= useNavigate()
-    console.log("I am auth", auth)
+    const navigate= useNavigate();
+    const dispatch = useDispatch();
   const [fromData, setFromData] = useState({
     email: "",
     password: "",
@@ -49,6 +50,8 @@ signInWithEmailAndPassword(auth, fromData.email, fromData.password)
   .then((userCredential) => {
       const user = userCredential.user;
       if(user.emailVerified){
+         dispatch(logUser(user))
+    localStorage.setItem('userinfo',JSON.stringify(user))
            setFromData({
                 email: "",
                 password: "",
@@ -100,14 +103,15 @@ signInWithEmailAndPassword(auth, fromData.email, fromData.password)
   }
   };
  const handleLoginWithGoogle=()=>{
-  console.log(" Hello world")
+ 
  const provider = new GoogleAuthProvider();
 signInWithPopup(auth, provider)
   .then((result) => {
     // This gives you a Google Access Token. You can use it to access the Google API.
     const user = result.user;
-   console.log(user)
-   navigate('/chatting-app')
+    dispatch(logUser(user))
+    localStorage.setItem('userinfo',JSON.stringify(user))
+        navigate("/home");
   }).catch((error) => {
     // Handle Errors here.
     const errorCode = error.code;

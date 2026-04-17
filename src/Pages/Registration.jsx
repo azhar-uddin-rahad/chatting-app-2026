@@ -3,6 +3,8 @@ import log from "../assets/log.png";
 import { Alert, Button, TextField, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Image from "../Components/Image";
+import { useSelector, useDispatch } from 'react-redux'
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -23,11 +25,14 @@ const Registration = () => {
     nameError: "",
     passwordError: "",
   });
+    const dispatch = useDispatch()
   const [notificationBackgroundColor, setNotificationBackgroundColor] =
     useState({
       success: "#5F35F5",
       error: "#fff",
     });
+ const currentUser=  useSelector(state => state?.counter?.value)
+    console.log(currentUser)
 
   //input on change, remove error , take from data
   const handleFromDataChange = (e) => {
@@ -71,10 +76,12 @@ const Registration = () => {
           displayName: fromData.full_name,
           photoURL: "https://i.ibb.co/xGrXcnP/profile.png",
         })
-          .then(() => {
+          /* .then(() => {
             sendEmailVerification(auth.currentUser);
-          })
+          }) */
           .then(() => {
+        localStorage.setItem('userinfo',JSON.stringify(user))
+          
             setFromData({
               full_name: "",
               email: "",

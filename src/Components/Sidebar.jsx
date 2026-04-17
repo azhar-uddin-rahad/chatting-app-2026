@@ -4,16 +4,18 @@ import { AiOutlineHome, AiFillMessage, AiFillSetting } from "react-icons/ai";
 import { IoIosNotifications } from "react-icons/io";
 import { VscSignOut } from "react-icons/vsc";
 import { getAuth, signOut } from "firebase/auth";
-// import { logUser } from "../slice/UserSlice";
+import { logUser } from "../Slice/userSlicer";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Slider from "@mui/material/Slider";
+import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
   const [zoom, setZoom] = useState(1);
   const navigate = useNavigate();
+  const dispatch= useDispatch()
   const style = {
     position: "absolute",
     top: "50%",
@@ -32,6 +34,8 @@ const Sidebar = () => {
     const auth = getAuth();
     signOut(auth)
       .then(() => {
+        dispatch(logUser(null))
+        localStorage.removeItem('userinfo')
         navigate("/");
       })
       .catch((error) => {
