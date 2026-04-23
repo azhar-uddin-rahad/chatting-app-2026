@@ -3,8 +3,8 @@ import log from "../assets/log.png";
 import { Alert, Button, TextField, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Image from "../Components/Image";
-import { useSelector, useDispatch } from 'react-redux'
-
+import { useSelector, useDispatch } from "react-redux";
+import { getDatabase, push, ref, set } from "firebase/database";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -12,6 +12,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { toast } from "react-toastify";
+
 const Registration = () => {
   const auth = getAuth();
   const navigate = useNavigate();
@@ -25,18 +26,18 @@ const Registration = () => {
     nameError: "",
     passwordError: "",
   });
-    const dispatch = useDispatch()
+   const db = getDatabase();
+  const dispatch = useDispatch();
   const [notificationBackgroundColor, setNotificationBackgroundColor] =
     useState({
       success: "#5F35F5",
       error: "#fff",
     });
- const currentUser=  useSelector(state => state?.counter?.value)
-    console.log(currentUser)
-
+  const currentUser = useSelector((state) => state?.userAuth?.value);
+  console.log("current users",currentUser);
+ 
   //input on change, remove error , take from data
   const handleFromDataChange = (e) => {
-    
     setFromData({
       ...fromData,
       [e.target.name]: e.target.value,
@@ -50,14 +51,12 @@ const Registration = () => {
     if (e.target.name === "password") {
       setError({ ...error, passwordError: "" });
     }
-
   };
 
   // include error if data not available, final signup with firebase
   const handleRegistration = () => {
-   
     const newError = {};
-     if (!fromData.full_name) {
+    if (!fromData.full_name) {
       newError.nameError = "Full Name IS required";
     }
     if (!fromData.email) {
@@ -68,54 +67,61 @@ const Registration = () => {
       newError.passwordError = "Enter YOur password";
     }
     setError({ ...error, ...newError });
-  if (fromData.email && fromData.password && fromData.full_name) {
-    console.log("condition work")
-    createUserWithEmailAndPassword(auth, fromData.email, fromData.password)
-      .then(({ user }) => {
-        updateProfile(auth.currentUser, {
-          displayName: fromData.full_name,
-          photoURL: "https://i.ibb.co/xGrXcnP/profile.png",
-        })
-          /* .then(() => {
+    if (fromData.email && fromData.password && fromData.full_name) {
+      console.log("condition work");
+      createUserWithEmailAndPassword(auth, fromData.email, fromData.password)
+        .then(({ user }) => {
+          updateProfile(auth.currentUser, {
+            displayName: fromData.full_name,
+            photoURL: "https://i.ibb.co/xGrXcnP/profile.png",
+          })
+            /* .then(() => {
             sendEmailVerification(auth.currentUser);
           }) */
-          .then(() => {
-        localStorage.setItem('userinfo',JSON.stringify(user))
-          
-            setFromData({
-              full_name: "",
-              email: "",
-              password: "",
+            .then(() => {
+              localStorage.setItem("userinfo", JSON.stringify(user));
+             set(ref(db,'users/'+ user.uid), {
+                    username: fromData.full_name,
+                    email:fromData.email,
+                    profile_picture : user.photoURL
+                  });
+                  console.log("data calling")
+              setFromData({
+                full_name: "",
+                email: "",
+                password: "",
+              });
+              toast.success(
+                `Registration Successful! Please Verify Your Email`,
+                {
+                  position: "top-center",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+                  style: {
+                    "--dynamic-bg-color": notificationBackgroundColor.success,
+                  },
+                },
+              );
+              setTimeout(() => {
+                navigate("/");
+              }, 1000);
             });
-            toast.success(`Registration Successful! Please Verify Your Email`, {
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error;
+
+          console.log(errorCode);
+          if (errorCode?.includes("email")) {
+            console.log("Hello");
+            toast.error(`"email already used"`, {
               position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-              style: {
-                "--dynamic-bg-color": notificationBackgroundColor.success,
-              },
-            });
-            setTimeout(() => {
-              navigate("/");
-            }, 1000);
-          });
-        console.log(user);
-      })
-      .catch((error) => {
-        
-        const errorCode = error.code;
-        const errorMessage = error;
-       
-        console.log(errorCode)
-       if (errorCode?.includes('email')) {
-       console.log("Hello")
-          toast.error(`"email already used"`, {
-              position:  "top-center",
               autoClose: 5000,
               hideProgressBar: false,
               closeOnClick: true,
@@ -127,15 +133,10 @@ const Registration = () => {
                 "--dynamic-bg-color": notificationBackgroundColor.error,
               },
             });
-        }
-         
-
-      });
-  }
-
+          }
+        });
+    }
   };
-
-
 
   return (
     <div className="authenticationPage">
@@ -165,7 +166,7 @@ const Registration = () => {
             label="Email Address"
             variant="outlined"
             className="inputCss"
-              value={fromData?.email}
+            value={fromData?.email}
           />
           {error.nameError && <Alert severity="error">{error.nameError}</Alert>}
 

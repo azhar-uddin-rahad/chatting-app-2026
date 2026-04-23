@@ -4,6 +4,6 @@ import  userSlicer from './Slice/userSlicer'
 
 export default configureStore({
   reducer: {
-    counter: userSlicer
+    userAuth: userSlicer
   }
 })

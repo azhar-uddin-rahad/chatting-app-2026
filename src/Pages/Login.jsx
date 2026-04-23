@@ -5,12 +5,17 @@ import { Link, useNavigate } from "react-router-dom";
 import Image from "../Components/Image";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logUser } from "../Slice/userSlicer"
+import { getDatabase, push, ref, set } from "firebase/database";
 const Login = () => {
     const auth = getAuth();
     const navigate= useNavigate();
     const dispatch = useDispatch();
+      const db = getDatabase();
+      const currentUserInfo=  useSelector(state => state?.userAuth?.value);
+
+      console.log( " currentUserInfo",currentUserInfo?.uid)
   const [fromData, setFromData] = useState({
     email: "",
     password: "",
@@ -40,7 +45,6 @@ const Login = () => {
       newError.emailError = "Enter YOur Email";
     }
     if (!fromData.password) {
-
       newError.passwordError = "Enter YOur Password";
     }
     setError({...error,...newError})
@@ -49,7 +53,7 @@ const Login = () => {
 signInWithEmailAndPassword(auth, fromData.email, fromData.password)
   .then((userCredential) => {
       const user = userCredential.user;
-      if(user.emailVerified){
+       if(user){
          dispatch(logUser(user))
     localStorage.setItem('userinfo',JSON.stringify(user))
            setFromData({
@@ -68,7 +72,7 @@ signInWithEmailAndPassword(auth, fromData.email, fromData.password)
                 theme: "light",
                 });
                 setTimeout(()=>{
-                    navigate('/chatting-app')
+                    navigate('/home')
                   })
       }
       else{
@@ -111,6 +115,11 @@ signInWithPopup(auth, provider)
     const user = result.user;
     dispatch(logUser(user))
     localStorage.setItem('userinfo',JSON.stringify(user))
+     set(ref(db, "users/"+ user?.uid), {
+          username: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        });
         navigate("/home");
   }).catch((error) => {
     // Handle Errors here.
