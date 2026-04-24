@@ -10,11 +10,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Slider from "@mui/material/Slider";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Sidebar = () => {
   const [zoom, setZoom] = useState(1);
   const navigate = useNavigate();
+   const currentUserInfo = useSelector((state) => state?.userAuth?.value);
   const dispatch= useDispatch()
   const style = {
     position: "absolute",
@@ -55,7 +56,7 @@ const Sidebar = () => {
               alt=""
             />
             <p className="author">
-              {/* {isLoginUserData?.displayName.split(" ").slice(0, 2).join(" ")} */}
+             {currentUserInfo?.displayName.split(" ").slice(0, 2).join(" ")}
             </p>
           </div>
           <ul className="list">

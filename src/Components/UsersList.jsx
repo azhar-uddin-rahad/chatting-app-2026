@@ -1,22 +1,24 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
 import { useSelector } from "react-redux";
 
 const UsersList = () => {
   const db = getDatabase();
   const [getUsersList, setGetUsersList] = useState([]);
   const currentUserInfo = useSelector((state) => state?.userAuth?.value);
-const [getFndRequest,setGetFndRequest]=useState([])
-  console.log(" currentUserInfo", currentUserInfo?.uid);
+const [getFndRequest,setGetFndRequest]=useState([]);
+const [fnds,setFands]= useState([])
+ const [blockID, setBlockID]= useState([]);
+ const[blockList,setBlockList]= useState([])
   useEffect(() => {
     const starCountRef = ref(db, "users/");
     onValue(starCountRef, (snapshot) => {
       //   const data = snapshot.val();
       const arr = [];
       snapshot.forEach((items) => {
-        console.log(items.key, "data arr", currentUserInfo?.uid);
+        
         if (items.key != currentUserInfo?.uid)
           arr.push({ ...items.val(), userUid: items.key });
       });
@@ -28,18 +30,40 @@ const [getFndRequest,setGetFndRequest]=useState([])
     const fndRequestData= ref(db, "friendRequests");
  onValue(fndRequestData, (snapshot) => {
    const arr = [];
+  
    snapshot.forEach((item) => {
     arr.push(item.val().whoReceiveID + item.val().whoSendID  )
    });
-   setGetFndRequest(arr)
+    setGetFndRequest(arr)
  })
   },[])
-  console.log("fnd list",getFndRequest)
+
+useEffect(()=>{
+    const fndRequestData= ref(db, "friends");
+ onValue(fndRequestData, (snapshot) => {
+   const arr = [];
+   snapshot.forEach((item) => {
+    arr.push(item.val().whoReceiveID + item.val().whoSendID  )
+   });
+   setFands(arr)
+ })
+  },[])
+
+useEffect(() => {
+    const blockRef = ref(db, "blocklist");
+    onValue(blockRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {   
+       arr.push(item.val().blockId + item.val().blockById);  
+    });
+    setBlockID(arr);
+    });
+  }, []);
+
   
   const handleFriendRequest = (item) => {
-    console.log("who receive id", item);
-    console.log("who send request", currentUserInfo);
-    set(push(ref(db, "friendRequests")), {
+   
+    set(ref(db, "friendRequests/" + (currentUserInfo.uid+item.userUid)), {
       whoSendID: currentUserInfo.uid,
       whoSendName: currentUserInfo.displayName,
       whoReceiveID: item.userUid,
@@ -47,7 +71,8 @@ const [getFndRequest,setGetFndRequest]=useState([])
     });
   };
   const handleFriendReqCancel=(item)=> {
-
+  
+     remove(ref(db,"friendRequests/"+ currentUserInfo.uid+item.userUid))
   }
   return (
     <div className="box scroll-container">
@@ -57,8 +82,9 @@ const [getFndRequest,setGetFndRequest]=useState([])
       </div>
 
       {getUsersList &&
-        getUsersList?.map((item, index) => (
-          <div key={index} className="group-card-body">
+        getUsersList?.map((item, index) => 
+          <div key={index}>
+          {blockID.includes(item.userUid + currentUserInfo.uid)  || blockID.includes(currentUserInfo.uid + item.userUid) ? <></>:  <div  className="group-card-body">
             <div className="profile">
               <img src="https://i.ibb.co/xGrXcnP/profile.png" alt="" />
             </div>
@@ -66,7 +92,7 @@ const [getFndRequest,setGetFndRequest]=useState([])
               <h4 className="groupsName">{item.username}</h4>
               <p className="messageTitle">{item.email}</p>
             </div>
-            {}
+            
 
             {/*    <Button className="addBtn" size="small" >
               cancel
@@ -93,7 +119,16 @@ const [getFndRequest,setGetFndRequest]=useState([])
              >
               P 
             </Button>
-          :
+          :fnds.includes(item.userUid + currentUserInfo.uid)  || fnds.includes(currentUserInfo.uid + item.userUid) ? <Button
+              className="addBtn" color="success" 
+             >
+              F
+            </Button> :blockID.includes(item.userUid + currentUserInfo.uid)  || blockID.includes(currentUserInfo.uid + item.userUid) ? <Button
+              className="addBtn" color="success" 
+             >
+              Block
+            </Button>:
+
           <Button
               className="addBtn"
               onClick={() => handleFriendRequest(item)}
@@ -102,8 +137,9 @@ const [getFndRequest,setGetFndRequest]=useState([])
             </Button>
           }
             
-          </div>
-        ))}
+          </div>}
+         </div>
+        )}
     </div>
   );
 };
