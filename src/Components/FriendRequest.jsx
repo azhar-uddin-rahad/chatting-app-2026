@@ -42,7 +42,7 @@ const FriendRequest = () => {
 
 
   return (
-    <div className="box">
+    <div className="box  scroll-container">
       <div className="group-heading">
         <h3>Friend Request</h3>
         <Button>:</Button>

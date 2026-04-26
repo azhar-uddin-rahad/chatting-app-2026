@@ -42,7 +42,7 @@ const FriendsList = () => {
   };
   
   return (
-    <div className="box">
+    <div className="box  scroll-container">
       <div className="group-heading">
         <h3>Friends</h3>
         {/* <Button>Create Account</Button> */}

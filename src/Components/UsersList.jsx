@@ -17,12 +17,10 @@ const [fnds,setFands]= useState([])
     onValue(starCountRef, (snapshot) => {
       //   const data = snapshot.val();
       const arr = [];
-      snapshot.forEach((items) => {
-        
+      snapshot.forEach((items) => { 
         if (items.key != currentUserInfo?.uid)
           arr.push({ ...items.val(), userUid: items.key });
       });
-
       setGetUsersList(arr);
     });
   }, []);
