@@ -15,6 +15,9 @@ import Registration from "./Pages/Registration";
 import { ToastContainer, toast } from "react-toastify";
 import ForgetPassword from "./Pages/ForgetPassword";
 import RootLayout from "./RootLayout/RootLayout";
+import Message from "./Pages/Message";
+
+import GroupMessageTest from "./Components/GroupMessageTest";
 {
   /* <Route>
     <Route path='/' element={<Login></Login>}></Route>
@@ -36,8 +39,11 @@ import RootLayout from "./RootLayout/RootLayout";
         <Route path="/forget-password" element={<ForgetPassword></ForgetPassword>}></Route>
         <Route path="/" element={<RootLayout></RootLayout>}>
         <Route path="/home" element={<Home></Home>}></Route>
+        <Route path="/message" element={<Message></Message>}></Route>
         
         </Route>
+       
+
       </Route>
     )
   );

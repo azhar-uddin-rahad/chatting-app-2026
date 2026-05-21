@@ -87,7 +87,8 @@ useEffect(() => {
               <img src="https://i.ibb.co/xGrXcnP/profile.png" alt="" />
             </div>
             <div className="title">
-              <h4 className="groupsName">{item.username}</h4>
+             
+              <h4 className="">{item.username}</h4>
               <p className="messageTitle">{item.email}</p>
             </div>
             
@@ -101,14 +102,18 @@ useEffect(() => {
              </Button> */}
             {getFndRequest.includes(item.userUid + currentUserInfo.uid) ?
             <>
-            <Button className="addBtn mr-2" size="small" onClick={()=>handleFriendReqCancel(item)}>
+            <div>
+<Button className=" mr-2" size="small" onClick={()=>handleFriendReqCancel(item)}>
               X
             </Button> 
+            
             <Button
-              className="addBtn"
+             
              >
               P 
             </Button>
+            </div>
+            
             </>
             :
             getFndRequest.includes(currentUserInfo.uid + item.userUid ) ? 

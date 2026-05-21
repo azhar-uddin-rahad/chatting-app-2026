@@ -20,7 +20,7 @@ const currentUserInfo=  useSelector(state => state?.userAuth?.value);
   },[]) 
   return (
       <div>
-    <Grid container spacing={2}>
+    <Grid container >
         <Grid item xs={4}>
         <Group/>
         <FriendRequest></FriendRequest>

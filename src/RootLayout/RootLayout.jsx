@@ -1,27 +1,23 @@
-
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
-import React from 'react'
-import Sidebar from '../Components/Sidebar'
-import { Outlet } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
 
+import Sidebar from '../Components/Sidebar';
 const RootLayout = () => {
-  const count = useSelector(state => state?.counter?.value)
-  console.log(count)
-  const dispatch = useDispatch()
-  return (
-    
-      <div>
-          <Grid container spacing={2}>
-          <Grid item xs={2}>
+   
+    return (
+        <div>
+        <Grid container spacing={2}  sx={{width: "100%"}}>
+          <Grid item xs={2} sx={{width:"10%"}}>
           <Sidebar></Sidebar>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={10} sx={{width:"85%"}}>
         <Outlet></Outlet>
         </Grid>
         </Grid>
-    </div>
-  )
-}
+        
+        </div>
+    );
+};
 
-export default RootLayout
+export default RootLayout;
