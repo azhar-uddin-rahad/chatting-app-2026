@@ -365,7 +365,7 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 20px 0 20px 20px;
+  border-width: 10px 0 20px 20px;
   border-color: transparent transparent transparent #f1f1f1;
   position: absolute;
   bottom: -15px;
@@ -455,7 +455,7 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 20px 0 20px 20px;
+  border-width: 10px 0 20px 20px;
   border-color: transparent transparent transparent #f1f1f1;
   position: absolute;
   bottom: -15px;
@@ -499,7 +499,7 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 20px 20px 20px 0; /* Adjust the right border-width to create a right arrow */
+  border-width: 10px 20px 20px 0; /* Adjust the right border-width to create a right arrow */
   border-color: transparent #007bff transparent transparent; /* Adjust the border-color accordingly */
   position: absolute;
   bottom: -15px;
@@ -526,7 +526,7 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 20px 0 20px 20px;
+  border-width: 10px 0 20px 20px;
   border-color: transparent transparent transparent #f1f1f1;
   position: absolute;
   bottom: -15px;
@@ -552,7 +552,7 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 20px 20px 20px 0; /* Adjust the right border-width to create a right arrow */
+  border-width: 10px 20px 20px 0; /* Adjust the right border-width to create a right arrow */
   border-color: transparent #007bff transparent transparent; /* Adjust the border-color accordingly */
   position: absolute;
   bottom: -15px;

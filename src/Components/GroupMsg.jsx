@@ -1,9 +1,12 @@
 import { Button } from "@mui/material";
 import { getDatabase, onValue, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { activeChat } from "../Slice/activeChatslicer";
+import { FaComments } from "react-icons/fa";
 
 const GroupMsg = () => {
+  const dispatch = useDispatch();
   const db = getDatabase();
   const [myGroupList, setMyGroupList] = useState([]);
   const [myJoinedGroupList, setMyJoinedGroupList] = useState([]);
@@ -31,7 +34,21 @@ const GroupMsg = () => {
     });
   }, []);
 
-  console.log("myGroupList", myJoinedGroupList);
+  const handleMsg = (items) => {
+    dispatch(
+      activeChat({
+        type: "groupMsg",
+        activeChatId: items.groupId,
+        activeChatName: items.groupName,
+      }),
+
+    );
+     localStorage.setItem("activeChat",JSON.stringify({
+        type : "groupMsg",
+        activeChatId: items.groupId,
+        activeChatName: items.groupName,
+      }))
+  };
 
   return (
     <div>
@@ -46,18 +63,21 @@ const GroupMsg = () => {
                 <img src={"https://i.ibb.co/xGrXcnP/profile.png"} alt="" />
               </div>
               <div className="title">
-                <p className="messageTitle">Admin :{item?.adminName}</p>
+                <p className="messageTitle">
+                  <b>Admin</b> :{item?.adminName}
+                </p>
                 <h4 className="groupsName">groupName: {item?.groupName}</h4>
                 <p className="messageTitle">
                   groupTagLine: {item?.groupTagLine}{" "}
                 </p>
               </div>
               <Button
-                variant="contained"
-                sx={{ padding: "0px 10px", backgroundColor: "#5f35f5" }}
-                //   onClick={()=>handleGroupMessage(item)}
+                className="addBtn"
+                onClick={() => {
+                  handleMsg(item);
+                }}
               >
-                Admin
+                <FaComments></FaComments>MSG
               </Button>
             </div>
           ) : (
@@ -73,24 +93,25 @@ const GroupMsg = () => {
                       />
                     </div>
                     <div className="title">
-                      <p className="messageTitle">Admin :{member?.adminName}</p>
+                      <p className="messageTitle">
+                        {" "}
+                        <b>Admin</b> :{member?.adminName}
+                      </p>
                       <h4 className="groupsName">
                         groupName: {member?.groupName}
                       </h4>
                       <p className="messageTitle">
                         groupTagLine: {member?.groupTagLine}{" "}
                       </p>
+                      <p>Member</p>
                     </div>
                     <Button
-                      variant="contained"
-                      sx={{
-                        marginLeft: "5px",
-                        padding: "0px 10px",
-                        backgroundColor: "#5f35f5",
+                      className="addBtn"
+                      onClick={() => {
+                        handleMsg(item);
                       }}
-                      // onClick={()=>handleGroupMessage(item)}
                     >
-                      Member
+                      <FaComments></FaComments>MSG
                     </Button>
                   </div>
                 ),
